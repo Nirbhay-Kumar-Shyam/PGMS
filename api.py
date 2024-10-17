@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from mysql.connector import connect
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey, DateTime, func
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base,relationship
 from flask_cors import CORS
@@ -43,19 +42,53 @@ class PG_Member(Base):
     name = Column(String(255), nullable=False, index=True)  # Added index for frequent queries on name
     room_number = Column(Integer, ForeignKey('room.room_number'), nullable=False, index=True)  # Index for foreign key relationships
 
+Session = scoped_session(sessionmaker(bind=engine))
+session = Session()
 
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/pg_name', methods = 'POST')
+@app.route('/pg_name', methods = ['POST'])
 def add_pg():
     try:
-        print("Hello world")
+        # print("Hello world")
+        data = request.get_json()
+        app.logger.info(f'Received data: {data}')
+        pg_name = PG_Name(
+            pg_name = data[0]['pg_name']
+        )
+        session.add(pg_name)
+        session.commit()
+        return jsonify({"message": "New pg added!", "pg_name": str(pg_name)}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+@app.route('/pg_list', methods = ['GET'])
+def get_pg():
+    try:
+        pg = session.query(PG_Name).all()
+        return jsonify([{
+            "pg_id": p.pg_id,
+            "pg_name": p.pg_name
+            
+        } for p in pg])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
+@app.route('/wings', methods = ['POST'])
+def wings():
+    try:
+        data = request.get_json()
+        wings_list = WingName(
+            wing_id = data[0]['wing_id'],
+            pg_id = data[0]['pg_id']
+        )
+        session.add(wings_list)
+        session.commit()
+        return jsonify({"message": "New pg added!", "wing_list": str(wings_list)}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 if __name__ == '__main__':
     # Create the database and tables if they don't exist
     Base.metadata.create_all(engine)
