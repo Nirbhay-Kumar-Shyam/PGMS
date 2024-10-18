@@ -22,7 +22,7 @@ class PG_Name(Base):
 class WingName(Base):
     __tablename__ = 'wing_name'
 
-    wing_id = Column(String(50), primary_key=True)  # Specified max length for the wing_id
+    wing_name = Column(String(50), primary_key=True, nullable = False)  # Specified max length for the wing_id
     pg_id = Column(Integer, ForeignKey('pg_list.pg_id'), nullable=False, index=True)  # Index on foreign key pg_id for faster joins
     # One-to-many relationship with Room
     room = relationship('Room', backref='wing_name', lazy=True)
@@ -31,7 +31,7 @@ class Room(Base):
     __tablename__ = 'room'
 
     room_number = Column(Integer, primary_key=True)  # Kept as Integer for efficient indexing and comparisons
-    wing_id = Column(String(50), ForeignKey('wing_name.wing_id'), nullable=False, index=True)  # Added index for faster lookups
+    wing_id = Column(String(50), ForeignKey('wing_name.wing_name'), nullable=False, index=True)  # Added index for faster lookups
     # One-to-many relationship with PG_Member
     pg_member = relationship('PG_Member', backref='room', lazy=True)
 
