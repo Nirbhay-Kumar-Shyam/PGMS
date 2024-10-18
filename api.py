@@ -81,7 +81,7 @@ def wings():
     try:
         data = request.get_json()
         wings_list = WingName(
-            wing_id = data[0]['wing_id'],
+            wing_name = data[0]['wing_name'],
             pg_id = data[0]['pg_id']
         )
         session.add(wings_list)
