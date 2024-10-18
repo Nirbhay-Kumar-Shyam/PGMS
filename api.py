@@ -89,6 +89,19 @@ def wings():
         return jsonify({"message": "New pg added!", "wing_list": str(wings_list)}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@app.route('/wings_list', methods = ['GET'])
+def get_wings():
+    try:
+        wing_list = session.query(WingName).all()
+        return jsonify([{
+            "wing_name": wing.wing_name,
+            "pg_id": wing.pg_id
+            
+        } for wing in wing_list])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 if __name__ == '__main__':
     # Create the database and tables if they don't exist
     Base.metadata.create_all(engine)
