@@ -7,7 +7,7 @@ const PG_member = () =>{
     const [error, setError] = useState(null);
 
     useEffect(()=>{
-        fetch('http://127.0.0.1:5000/pg_list')
+        fetch('http://127.0.0.1:5000/get_member')
         .then((response)=>{
             if(!response.ok)
             {

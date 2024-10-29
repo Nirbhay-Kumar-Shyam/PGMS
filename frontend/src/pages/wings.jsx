@@ -5,7 +5,7 @@ const Wings = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/pg_list')
+        fetch(`http://127.0.0.1:5000/wings_list`)
         .then((response) => {
             if(!response.ok)
             {

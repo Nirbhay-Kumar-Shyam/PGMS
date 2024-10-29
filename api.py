@@ -91,10 +91,10 @@ def wings():
         return jsonify({"error": str(e)}), 400
 
 
-@app.route('/wings_list', methods = ['GET'])
-def get_wings():
+@app.route('/wings_list/<int:pg_id>', methods = ['GET'])
+def get_wings(pg_id):
     try:
-        wing_list = session.query(WingName).all()
+        wing_list = session.query(WingName).filter_by(pg_id = pg_id).all()
         return jsonify([{
             "wing_name": wing.wing_name,
             "pg_id": wing.pg_id
@@ -102,6 +102,63 @@ def get_wings():
         } for wing in wing_list])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+@app.route('/set_rooms', methods = ['POST'])
+def set_rooms():
+    try:
+        data = request.json()
+        room = Room(
+            room_number = data[0]['room_number'],
+            wing_id = data[0]['wing_id']
+        )
+        session.add(room)
+        session.commit()
+        return jsonify({"message": "new room added", "room": str(room)})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+
+@app.route('/get_rooms/<string:wing_name>', methods = ["GET"])
+def get_room(wing_name):
+    try:
+        room_list = session.query(Room).filter(wing_name == wing_name).all()
+        print(room_list)
+        return jsonify([{
+            "room_number": room.room_number,
+            "wing_id": room.wing_id
+            } for room in room_list])
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
+@app.route('/set_member', methods = ['POST'])
+def set_member():
+    try:
+        data = request.get_json()
+
+        member = PG_Member(
+            member_id = data[0]['member_id'],
+            name = data[0]['name'],
+            room_number =  data[0]['room_number']
+        )
+        session.add(member)
+        session.commit()
+        return  jsonify({"message": "member is added", "member": str(member)})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+@app.route('/get_member/<int:room_number>', methods = ['GET'])
+def get_members(room_number):
+    try: 
+        members = session.query(PG_Member).filter(room_number = room_number).all()
+        return jsonify([{
+            "member_id": member.member_id,
+            "member": member.name,
+            "room_number": member.room_number
+            } for member in members])
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 if __name__ == '__main__':
     # Create the database and tables if they don't exist
     Base.metadata.create_all(engine)
