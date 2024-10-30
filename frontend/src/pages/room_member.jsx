@@ -6,22 +6,24 @@ function RoomMember() {
   const location = useLocation();
 //   const navigate = useNavigate();
   const { data } = location.state || {}; // Access the data passed via state
+  console.log("Data:", data); // Check the actual content of data
+  console.log("Type of data:", typeof data); // Shows if it's "object", "string", etc.
 
-  const handleClick = async (wing_name) =>{
-    try{
+  // const handleClick = async (wing_name) =>{
+  //   try{
 
-        const response = await axios.get(`http://localhost:5000/get_rooms/${wing_name}`);
-        const fetchedData = response.data;
+  //       const response = await axios.get(`http://localhost:5000/get_rooms/${wing_name}`);
+  //       const fetchedData = response.data;
 
-      // Navigate to the next page with fetched data
-            // navigate('/pg_room', { state: { data: fetchedData } });
-          console.log('Rule added:', response.data);
+  //     // Navigate to the next page with fetched data
+  //           // navigate('/pg_room', { state: { data: fetchedData } });
+  //         console.log('Rule added:', response.data);
 
-    } catch(error)
-    {
-        console.error('Error adding rule:', error);
-    }
-  }
+  //   } catch(error)
+  //   {
+  //       console.error('Error adding rule:', error);
+  //   }
+  // }
   return (
     <div>
       <h1>Hello Nirbhay</h1>

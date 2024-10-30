@@ -6,11 +6,13 @@ function WingOfPG() {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {}; // Access the data passed via state
-
-  const handleClick = async (wing_name) =>{
+  // data = Array.isArray(data) ? data : Object.entries(data || {});
+  console.log("data:", data);
+  console.log("dataType:", typeof data);
+  const handleClick = async (wing_id) =>{
     try{
 
-        const response = await axios.get(`http://localhost:5000/get_rooms/${wing_name}`);
+        const response = await axios.get(`http://localhost:5000/get_rooms/${wing_id}`);
         const fetchedData = response.data;
 
       // Navigate to the next page with fetched data
@@ -28,7 +30,7 @@ function WingOfPG() {
       {data ? (
         <div>
           <h2>Fetched Data:</h2>
-          <pre>{JSON.stringify(data, null, 2)}</pre> {/* Display the fetched data */}
+          {/* <pre>{JSON.stringify(data, null, 2)}</pre> Display the fetched data */}
         </div>
       ) : (
         <p>No data available.</p>
@@ -36,17 +38,17 @@ function WingOfPG() {
 
 <div>
             <h1>Hello, Nirbhay</h1>
-            <pre>{JSON.stringify(data, null, 2)}</pre> {/* Display fetched data */}
+            {/* <pre>{JSON.stringify(data, null, 2)}</pre> Display fetched data */}
 
             <ul>
                 {data.map(user => (
-                    <li key={user.pg_id}>{user.wing_name}
+                    <li key={user.wing_id}>{user.wing_name}
                     <button
                     type="button"
-                    onClick={()=>handleClick(user.wing_name)}
+                    onClick={()=>handleClick(user.wing_id)}
                     className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
                 >
-                    <FaTrash className="mr-2" /> {user.wing_name}
+                    <FaTrash className="mr-2" /> {user.wing_id}
                 </button>
                     </li>
                     

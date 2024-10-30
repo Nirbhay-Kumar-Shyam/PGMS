@@ -7,14 +7,16 @@ function PgRoom() {
   const navigate = useNavigate();
   const { data } = location.state || {}; // Access the data passed via state
     console.log(data);
+    console.log("Type of data:", typeof data);
   const handleClick = async (room_number) =>{
     try{
 
         const response = await axios.get(`http://localhost:5000/get_member/${room_number}`);
         const fetchedData = response.data;
-
+        console.log(fetchedData);
+        console.log("Type of data:", typeof fetchedData);
       // Navigate to the next page with fetched data
-            navigate('/pg_member', { state: { data: fetchedData } });
+          navigate('/room_member', { state: { data: fetchedData } });
           console.log('Rule added:', response.data);
 
     } catch(error)
@@ -40,7 +42,7 @@ function PgRoom() {
 
             <ul>
                 {data.map(user => (
-                    <li key={user.wing_id}>{user.room_number}
+                    <li key={user.room_number}>{user.room_number}
                     <button
                     type="button"
                     onClick={()=>handleClick(user.room_number)}

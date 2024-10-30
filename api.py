@@ -21,8 +21,8 @@ class PG_Name(Base):
 
 class WingName(Base):
     __tablename__ = 'wing_name'
-
-    wing_name = Column(String(50), primary_key=True, nullable = False)  # Specified max length for the wing_id
+    wing_id = Column(Integer, primary_key=True, autoincrement=True, nullable = False)
+    wing_name = Column(String(50), nullable = False)  # Specified max length for the wing_id
     pg_id = Column(Integer, ForeignKey('pg_list.pg_id'), nullable=False, index=True)  # Index on foreign key pg_id for faster joins
     # One-to-many relationship with Room
     room = relationship('Room', backref='wing_name', lazy=True)
@@ -31,7 +31,7 @@ class Room(Base):
     __tablename__ = 'room'
 
     room_number = Column(Integer, primary_key=True)  # Kept as Integer for efficient indexing and comparisons
-    wing_id = Column(String(50), ForeignKey('wing_name.wing_name'), nullable=False, index=True)  # Added index for faster lookups
+    wing_id = Column(Integer, ForeignKey('wing_name.wing_id'), nullable=False, index=True)  # Added index for faster lookups
     # One-to-many relationship with PG_Member
     pg_member = relationship('PG_Member', backref='room', lazy=True)
 
@@ -95,7 +95,9 @@ def wings():
 def get_wings(pg_id):
     try:
         wing_list = session.query(WingName).filter_by(pg_id = pg_id).all()
+        print("Helloo:", wing_list)
         return jsonify([{
+            "wing_id": wing.wing_id,
             "wing_name": wing.wing_name,
             "pg_id": wing.pg_id
             
@@ -118,11 +120,11 @@ def set_rooms():
         return jsonify({"error": str(e)})
 
 
-@app.route('/get_rooms/<string:wing_name>', methods = ["GET"])
-def get_room(wing_name):
+@app.route('/get_rooms/<int:wing_id>', methods = ["GET"])
+def get_room(wing_id):
     try:
-        room_list = session.query(Room).filter(wing_name == wing_name).all()
-        print(room_list)
+        room_list = session.query(Room).filter(Room.wing_id == wing_id).all()
+        print("Helloo:", room_list)
         return jsonify([{
             "room_number": room.room_number,
             "wing_id": room.wing_id
@@ -150,7 +152,8 @@ def set_member():
 @app.route('/get_member/<int:room_number>', methods = ['GET'])
 def get_members(room_number):
     try: 
-        members = session.query(PG_Member).filter(room_number = room_number).all()
+        members = session.query(PG_Member).filter(PG_Member.room_number == room_number).all()
+        # print(members)
         return jsonify([{
             "member_id": member.member_id,
             "member": member.name,
