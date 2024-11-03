@@ -56,7 +56,7 @@ def add_pg():
         data = request.get_json()
         app.logger.info(f'Received data: {data}')
         pg_name = PG_Name(
-            pg_name = data[0]['pg_name']
+            pg_name = data['pg_name']
         )
         session.add(pg_name)
         session.commit()
@@ -75,6 +75,22 @@ def get_pg():
         } for p in pg])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+@app.route('/pg_name/<int:pg_id>', methods=['DELETE'])
+def remove_pg(pg_id):
+    try:
+        delete_pg = session.query(PG_Name).filter_by(pg_id=pg_id).first()
+
+        if not delete_pg:
+            return jsonify({"message": "Rule not found"}), 404
+
+        session.delete(delete_pg)
+        session.commit()
+
+        return jsonify({"message": "Rule deleted!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
 
 @app.route('/wings', methods = ['POST'])
 def wings():
@@ -104,6 +120,19 @@ def get_wings(pg_id):
         } for wing in wing_list])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+@app.route('/delete_wing/<int:wing_id>', methods = ['DELETE'])
+def delete_room(wing_id):
+    try:
+        print("Hello World:", wing_id)
+        delete_wing = session.query(WingName).filter_by(wing_id = wing_id).first()
+        if not delete_wing:
+            return jsonify({"message": "Rule not found"}), 404
+        # session.delete(delete_wing)
+        # session.commit()
+        return jsonify({"message": "Rule deleted!"}), 200
+    except Exception as e:
+        return jsonify({"error:", str(e)})
 
 @app.route('/set_rooms', methods = ['POST'])
 def set_rooms():

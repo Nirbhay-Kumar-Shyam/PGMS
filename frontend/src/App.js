@@ -8,6 +8,8 @@ import PG_member from './pages/pg_member';
 import WingOfPG from './pages/wings_for_pg';
 import PgRoom from './pages/pg_room';
 import RoomMember from './pages/room_member';
+import Add_pg from './pages/add_pg';
+import Add_wing from './pages/add_wing';
 function App() {
   return (
     // <div className="App">
@@ -23,6 +25,8 @@ function App() {
         <Route exact path='/rooms' element={<Rooms/>}/>
         <Route exact path='/pg_member' element={<PG_member/>}/>
         <Route exact path= '/room_member' element={<RoomMember/>}/>
+        <Route exct path= '/add_pg' element={<Add_pg/>}/>
+        <Route exact path= '/add_wing' element={<Add_wing/>}/>
       </Routes>
     </BrowserRouter>
   );

@@ -23,6 +23,28 @@ function WingOfPG() {
     {
         console.error('Error adding rule:', error);
     }
+  };
+
+  const addWing = async () =>{
+    try{
+
+      navigate('/add_wing');
+    }
+    catch(error)
+    {
+      console.log("error:", error);
+    }
+  };
+
+  const handleDelete = async (wing_id) =>{
+    try{
+      const response = await axios.delete(`http://localhost:5000/delete_wing/${wing_id}`);
+            const fetchedData = response.data;
+            console.log('Wing Deleted', fetchedData);
+    }
+    catch(error){
+      console.log("error:", error);
+    }
   }
   return (
     <div>
@@ -48,13 +70,32 @@ function WingOfPG() {
                     onClick={()=>handleClick(user.wing_id)}
                     className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
                 >
-                    <FaTrash className="mr-2" /> {user.wing_id}
+                    <FaCheckSquare className="mr-2" /> {user.wing_name}
+                </button>
+
+                <button
+                    type="button"
+                    onClick={()=>handleDelete(user.wing_id)}
+                    className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
+                >
+                    <FaTrash className="mr-2" /> Delete
                 </button>
                     </li>
                     
                 ))}
             </ul>
+            <button
+                    type="button"
+                    onClick={addWing}
+                    className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
+                >
+                    <FaPlus className="mr-2" /> Add Wing
+                </button>
+
+                
         </div>
+
+        
     </div>
 
     

@@ -42,11 +42,30 @@ const Home = () => {
 
       // Navigate to the next page with fetched data
             navigate('/wings_of_PG', { state: { data: fetchedData } });
-          console.log('Rule added:', response.data);
+          console.log('PG added:', response.data);
         } catch (error) {
-          console.error('Error adding rule:', error);
+          console.error('Error adding PG:', error);
         }
       };
+      const deletePg = async (pg_id) =>{
+        try{
+            const response = await axios.delete(`http://localhost:5000/pg_name/${pg_id}`)
+            const fetchedData = response.data;
+            console.log('PG Deleted', fetchedData);
+        }
+        catch(error){
+            console.error('Error in Deleting PG');
+        }
+      };
+    const handleAddPg = async () => {
+        try{
+            navigate('/add_pg');
+        }
+        catch(error)
+        {
+
+        }
+    }
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -68,12 +87,28 @@ const Home = () => {
                     onClick={()=>handleButton(user.pg_id)}
                     className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
                 >
-                    <FaTrash className="mr-2" /> {user.pg_name}
+                    <FaCheckSquare className="mr-2" /> {user.pg_name}
+                </button>
+
+                <button
+                    type="button"
+                    onClick={()=>deletePg(user.pg_id)}
+                    className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
+                >
+                    <FaTrash className="mr-2" /> Delete
                 </button>
                     </li>
                     
                 ))}
             </ul>
+
+            <button
+            type="button"
+            onClick={()=>handleAddPg()}
+            className="w-[22%] bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
+            >
+                <FaPlus className="mr-2" /> Add New PG 
+            </button>
         </div>
     );
 };
